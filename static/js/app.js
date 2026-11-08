@@ -1,6 +1,6 @@
 import { api } from "./api.js";
 import { store, refreshState, setLang } from "./store.js";
-import { flag, h, toast } from "./ui.js";
+import { flag, h, initTheme, toast } from "./ui.js";
 import * as V from "./views.js";
 
 const routes = {
@@ -47,6 +47,7 @@ setInterval(() => {
   }
 }, 15000);
 
+initTheme();
 addEventListener("hashchange", route);
 route();
 addEventListener("unhandledrejection", (e) => toast(e.reason?.message || "Error"));

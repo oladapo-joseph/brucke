@@ -10,14 +10,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/app.css">
+  <script>
+    // Apply a saved light/dark choice before the first paint (no flash of the wrong theme).
+    try { const t = localStorage.getItem("bruecke-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
 </head>
 <body>
   <div class="app">
     <aside class="nav" aria-label="Main">
-      <a class="brand" href="#/today" aria-label="Brücke home">
-        <svg viewBox="0 0 64 40" class="brand-mark" aria-hidden="true"><path d="M6 32 Q32 -4 58 32" /><path d="M4 34h56" class="deck"/></svg>
-        <span>Brücke</span>
-      </a>
+      <div class="brand-row">
+        <a class="brand" href="#/today" aria-label="Brücke home">
+          <svg viewBox="0 0 64 40" class="brand-mark" aria-hidden="true"><path d="M6 32 Q32 -4 58 32" /><path d="M4 34h56" class="deck"/></svg>
+          <span>Brücke</span>
+        </a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch theme"></button>
+      </div>
       <div class="lang-switch" role="tablist" aria-label="Language" id="langSwitch"></div>
       <nav class="tabs" id="tabs">
         <a href="#/today" data-tab="today"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span>Today</span></a>

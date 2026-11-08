@@ -2,7 +2,7 @@ import { api } from "./api.js";
 import { bridgeBoxes, grammarTable, writingFeedback } from "./player.js";
 import { speech } from "./speech.js";
 import { store, go, runAction, startLesson, startSession, startCheckpoint, startTestout, refreshState } from "./store.js";
-import { ICON, SKILL_ICON, accentBar, flag, gclass, h, md, pct, ring, shape, tagged, tipOn, toast, wordLabel, GENDER_NAME } from "./ui.js";
+import { ICON, SKILL_ICON, accentBar, flag, gclass, h, md, pct, ring, savedTheme, setTheme, shape, tagged, tipOn, toast, wordLabel, GENDER_NAME } from "./ui.js";
 
 const LNAME = { de: "German", fr: "French" };
 const GREET = { de: ["Guten Morgen", "Guten Tag", "Guten Abend"], fr: ["Bonjour", "Bonjour", "Bonsoir"] };
@@ -481,6 +481,9 @@ export async function settings(view) {
       h("label", { class: "field" }, "Speech speed", f.rate),
       h("label", { class: "field" }, "German voice", f.vde), h("label", { class: "field" }, "French voice", f.vfr),
       h("div", { class: "row" }, h("button", { class: "btn ghost", onclick: () => speech.say("Guten Tag! Wie geht's?", "de") }, "▶ Test German"), h("button", { class: "btn ghost", onclick: () => speech.say("Bonjour ! Ça va ?", "fr") }, "▶ Test French")),
+      h("label", { class: "field" }, "Theme", h("select", { "data-theme-select": true, onchange: (e) => setTheme(e.target.value) },
+        ...[["system", "Match my system"], ["light", "Light"], ["dark", "Dark"]].map(([v, t]) => h("option", { value: v, selected: savedTheme() === v }, t))),
+        h("span", { class: "hint" }, "Applies straight away. The sun/moon button next to the logo switches it too.")),
       h("label", { class: "row" }, f.colorsOn, "Grammar colours on words"),
       h("p", { class: "small muted" }, speech.canListen() ? "✅ Speech recognition available" : "⚠️ Speech recognition isn't available in this browser. Use Chrome or Edge.")),
     h("div", { class: "card stack" }, h("h3", {}, "Claude (optional)"),

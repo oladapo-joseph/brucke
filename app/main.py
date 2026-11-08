@@ -439,6 +439,16 @@ def get_schedule():
 
 
 # ---------------------------------------------------------------- frontend
+@app.middleware("http")
+async def revalidate_frontend(request, call_next):
+    # Make the browser re-check the HTML/JS/CSS on every load (cheap 304s via ETag), so an
+    # update never mixes a stale cached module with new ones and leaves a blank page.
+    response = await call_next(request)
+    if request.url.path == "/" or request.url.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 

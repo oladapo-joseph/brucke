@@ -173,3 +173,51 @@ export function ring(value, size = 76) {
 }
 
 export function pct(x) { return x == null ? "–" : Math.round(x * 100) + "%"; }
+
+// ---------------------------------------------------------------- light / dark theme
+// 'system' follows the OS; 'light' / 'dark' are stored per browser (a viewer convenience, not progress data).
+const THEME_KEY = "bruecke-theme";
+const SUN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>';
+const darkQuery = matchMedia("(prefers-color-scheme: dark)");
+
+export function savedTheme() {
+  try { const t = localStorage.getItem(THEME_KEY); return t === "light" || t === "dark" ? t : "system"; } catch { return "system"; }
+}
+
+export function effectiveTheme() {
+  return document.documentElement.dataset.theme || (darkQuery.matches ? "dark" : "light");
+}
+
+function syncThemeUI() {
+  const dark = effectiveTheme() === "dark";
+  const btn = document.getElementById("themeToggle");
+  if (btn) {
+    btn.innerHTML = dark ? SUN : MOON;
+    btn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+    btn.title = dark ? "Light mode" : "Dark mode";
+  }
+  document.querySelectorAll("[data-theme-select]").forEach((sel) => { sel.value = savedTheme(); });
+  const paper = getComputedStyle(document.documentElement).getPropertyValue("--paper").trim();
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", paper || (dark ? "#12151C" : "#FAF7F2"));
+}
+
+/** mode: 'light' | 'dark' | 'system' */
+export function setTheme(mode) {
+  const root = document.documentElement;
+  root.classList.add("theming");                      // brief cross-fade between palettes
+  if (mode === "system") delete root.dataset.theme; else root.dataset.theme = mode;
+  try { mode === "system" ? localStorage.removeItem(THEME_KEY) : localStorage.setItem(THEME_KEY, mode); } catch {}
+  syncThemeUI();
+  setTimeout(() => root.classList.remove("theming"), 450);
+}
+
+export function initTheme() {
+  const btn = document.getElementById("themeToggle");
+  btn?.addEventListener("click", () => {
+    setTheme(effectiveTheme() === "dark" ? "light" : "dark");
+    btn.classList.remove("spin"); void btn.offsetWidth; btn.classList.add("spin");
+  });
+  darkQuery.addEventListener?.("change", syncThemeUI);  // when following the system, keep the icon right
+  syncThemeUI();
+}

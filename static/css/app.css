@@ -473,3 +473,17 @@ details.fold[open] summary::before { transform: rotate(90deg); }
 .zone-meter .band { position: absolute; top: 0; bottom: 0; background: color-mix(in srgb, var(--ink) 18%, var(--surface)); border-radius: 4px; }
 .zone-meter .mark { position: absolute; top: -5px; width: 4px; height: 24px; margin-left: -2px; border-radius: 4px; background: var(--ink); box-shadow: 0 0 0 2px var(--surface); }
 .level-band.stretch .level-head .chip.level { background: var(--sun); color: #2A2000; }
+
+/* ---------------------------------------------------------------- theme toggle */
+.brand-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.theme-toggle { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center;
+  background: var(--surface-2); color: var(--ink); transition: transform .3s var(--spring), background .2s; }
+.theme-toggle:hover { transform: rotate(-15deg) scale(1.06); }
+.theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle.spin svg { animation: spinIn .5s var(--spring); }
+html.theming, html.theming *, html.theming *::before, html.theming *::after {
+  transition: background-color .35s ease, color .35s ease, border-color .35s ease, fill .35s ease, stroke .35s ease !important; }
+@media (max-width: 899px) {
+  .brand-row { display: contents; }
+  .theme-toggle { position: fixed; top: 10px; left: 12px; z-index: 31; background: var(--surface); box-shadow: var(--shadow); }
+}
